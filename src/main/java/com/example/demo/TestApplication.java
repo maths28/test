@@ -1,19 +1,16 @@
 package com.example.demo;
 
-import org.springframework.beans.BeansException;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
 import java.text.DecimalFormat;
 import java.util.concurrent.Future;
 
@@ -32,7 +29,7 @@ public class TestApplication {
 	}
 
 	@RequestMapping("/upload")
-	public String test(@RequestParam(name = "file", required = false)MultipartFile file, HttpServletResponse response) throws Exception{
+	public String test(@RequestParam(name = "file", required = false)MultipartFile file) throws Exception{
 		if(this.response == null){
 			this.response = this.uploadService.upload(file);
 		}
@@ -40,6 +37,13 @@ public class TestApplication {
 
 		return df.format(this.getProgress())+"<a href='/upload'>Rafr</a>";
 //		response.sendRedirect("/progress");
+	}
+
+	@GetMapping("/getfile/{fileName}")
+	public void getFile(@PathVariable("fileName") String fileName, HttpServletResponse response) throws Exception{
+		FileInputStream fis = new FileInputStream(new File("uploads/"+fileName));
+		IOUtils.copy(fis, response.getOutputStream());
+		response.flushBuffer();
 	}
 
 	private Double getProgress() throws Exception{
