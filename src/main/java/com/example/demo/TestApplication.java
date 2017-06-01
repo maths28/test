@@ -34,12 +34,12 @@ public class TestApplication {
 
 	@RequestMapping("/upload")
 	public String test(@RequestParam(name = "file", required = false)MultipartFile file) throws Exception{
-		if(this.response == null){
+		if(this.response == null && file!=null){
 			this.response = this.uploadService.upload(file);
 		}
 		DecimalFormat df = new DecimalFormat("0.00");
 
-		return df.format(this.getProgress())+"<a href='/upload'>Rafr</a>";
+		return (this.response != null ? df.format(this.getProgress()) : "") +"<a href='/upload'>Rafr</a>";
 //		response.sendRedirect("/progress");
 	}
 
