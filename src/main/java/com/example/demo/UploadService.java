@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,9 @@ public class UploadService {
 
     private double progress;
 
+    private Logger log = LoggerFactory.getLogger(UploadService.class);
+
+
     @Async
     public Future<Double> upload(MultipartFile file) throws IOException {
         File f = new File("uploads/");
@@ -39,6 +44,10 @@ public class UploadService {
             this.progress = countF / total * 100;
         }
         fos.close();
+        f = new File("uploads/");
+        for(String s : f.list()){
+            log.info(s);
+        }
         return new AsyncResult<Double>((double)100);
     }
 
