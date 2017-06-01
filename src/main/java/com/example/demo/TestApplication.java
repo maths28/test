@@ -1,6 +1,8 @@
 package com.example.demo;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,6 +26,8 @@ public class TestApplication {
 	@Autowired
 	private UploadService uploadService;
 
+	private Logger log = LoggerFactory.getLogger(TestApplication.class);
+
 	public static void main(String[] args) {
 		SpringApplication.run(TestApplication.class, args);
 	}
@@ -41,9 +45,19 @@ public class TestApplication {
 
 	@GetMapping("/getfile/{fileName}")
 	public void getFile(@PathVariable("fileName") String fileName, HttpServletResponse response) throws Exception{
-		FileInputStream fis = new FileInputStream(new File("uploads/"+fileName));
-		IOUtils.copy(fis, response.getOutputStream());
-		response.flushBuffer();
+		File f = new File("uploads/");
+		for (String s : f.list()){
+			log.info(s);
+		}
+		File fichier = new File("uploads/"+fileName);
+		if(fichier.exists()){
+			FileInputStream fis = new FileInputStream(fichier);
+			IOUtils.copy(fis, response.getOutputStream());
+			response.flushBuffer();
+		} else {
+			response.getOutputStream().println("ok");
+		}
+
 	}
 
 	private Double getProgress() throws Exception{
