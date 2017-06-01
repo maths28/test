@@ -62,7 +62,9 @@ public class TestApplication {
 
 	private Double getProgress() throws Exception{
 		if(this.response.isDone()){
-			return this.response.get();
+			Double response = this.response.get();
+			this.response = null;
+			return response;
 		} else {
 			return this.uploadService.getProgress();
 		}
