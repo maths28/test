@@ -72,4 +72,11 @@ public class TestApplication {
 		}
 	}
 
+
+	@GetMapping("/active")
+	public boolean active(){
+		log.info("Request active received");
+		return true;
+	}
+
 }
