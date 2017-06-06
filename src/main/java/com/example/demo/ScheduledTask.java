@@ -29,7 +29,7 @@ public class ScheduledTask {
         log.info("Sch. Task : " + Integer.toString(i));
     }
 
-    @Scheduled(fixedRate = 1800000)
+    @Scheduled(fixedRate = 300000)
     public void sendActive(){
         Boolean res = restTemplate.getForObject(rootUrl+"active", Boolean.class);
         log.info(res.toString());
